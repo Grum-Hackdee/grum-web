@@ -1,0 +1,22 @@
+{
+  "name": "grum-web",
+  "version": "1.0.0",
+  "description": "Server & web-client for grum",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Grum-Hackdee/grum-web.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Grum-Hackdee/grum-web/issues"
+  },
+    "homepage": "https://github.com/Grum-Hackdee/grum-web",
+    "scripts": {
+        "postinstall": "bower install"
+    }
+}
