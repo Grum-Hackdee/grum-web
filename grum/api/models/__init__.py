@@ -1,1 +1,1 @@
-__author__ = 'skull'
+from .message import Message
