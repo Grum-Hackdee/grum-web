@@ -11,3 +11,5 @@ from grum.api import models
 from grum.api.inbox import Inbox
 rest.add_resource(Inbox, '/inbox')
 
+from grum.api.messages import Messages
+rest.add_resource(Messages, '/messages/<string:message_id>')
