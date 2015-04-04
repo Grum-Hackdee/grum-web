@@ -58,5 +58,10 @@ target/
 
 .idea/
 
-#Foreman .env
+# Foreman .env
+# Foreman .env
 .env
+
+# Bower
+grum/static/bower
+
