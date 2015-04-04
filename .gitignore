@@ -59,7 +59,6 @@ target/
 .idea/
 
 # Foreman .env
-# Foreman .env
 .env
 
 # Bower
