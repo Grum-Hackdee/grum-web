@@ -11,6 +11,8 @@ class Message(db.Model):
     sender_nice = db.Column(db.String(128))
     sent_at = db.Column(db.Integer)
 
+    subject = db.Column(db.String(128))
+
     html = db.Column(db.Text)
     html_stripped = db.Column(db.Text)
 
