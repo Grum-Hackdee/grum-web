@@ -1,5 +1,19 @@
 {% extends 'base.html' %}
 
+{% block title %}
+  Mail | GRUM
+{% endblock %}
+
+
+{% block logged_in %}
+  <li class="dropdown messages-menu">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+      <i class="fa fa-envelope-o"></i>
+      <span class="label label-success">4</span>
+    </a>
+  </li>
+{% endblock %}
+
 
 {% block body %}
 
@@ -88,42 +102,42 @@
                       <td class="mailbox-subject"><b>AdminLTE 2.0 Issue</b> - Trying to find a solution to this problem...</td>
                       {# td class="mailbox-attachment"><i class="fa fa-paperclip"></i></td> #}
                       <td class="mailbox-date">15 days ago</td>
-                    </tr>
-                  </tbody>
-                </table><!-- /.table -->
-              </div><!-- /.mail-box-messages -->
-            </div><!-- /.box-body -->
-            <div class="box-footer no-padding">
-              <div class="mailbox-controls">
-                <!-- Check all button -->
-                <button class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i></button>                    
-                <div class="btn-group">
-                  <button class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
-                  <button class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
-                  <button class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
-                </div><!-- /.btn-group -->
-                <button class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
-                <div class="pull-right">
-                  1-50/200
-                  <div class="btn-group">
-                    <button class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-                    <button class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
-                  </div><!-- /.btn-group -->
-                </div><!-- /.pull-right -->
-              </div>
-            </div>
-          </div><!-- /. box -->
-        </div><!-- /.col -->
-      </div><!-- /.row -->
-    </section><!-- /.content -->
-  </div><!-- /.content-wrapper -->
-  <footer class="main-footer">
-    <div class="pull-right hidden-xs">
-      <b>Version</b> 2.0
-    </div>
-    <strong>Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights reserved.
-  </footer>
+</tr>
+</tbody>
+</table><!-- /.table -->
+</div><!-- /.mail-box-messages -->
+</div><!-- /.box-body -->
+<div class="box-footer no-padding">
+  <div class="mailbox-controls">
+    <!-- Check all button -->
+    <button class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i></button>                    
+    <div class="btn-group">
+      <button class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
+      <button class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
+      <button class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
+    </div><!-- /.btn-group -->
+    <button class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
+    <div class="pull-right">
+      1-50/200
+      <div class="btn-group">
+        <button class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
+        <button class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
+      </div><!-- /.btn-group -->
+    </div><!-- /.pull-right -->
+  </div>
+</div>
+</div><!-- /. box -->
+</div><!-- /.col -->
+</div><!-- /.row -->
+</section><!-- /.content -->
+</div><!-- /.content-wrapper -->
+<footer class="main-footer">
+  <div class="pull-right hidden-xs">
+    <b>Version</b> 2.0
+  </div>
+  <strong>Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights reserved.
+</footer>
 </div><!-- ./wrapper -->
 
 {% endblock %}
-  <script type="application/javascript" src="{{ url_for('static', filename='mail.js')}}"
+<script type="application/javascript" src="{{ url_for('static', filename='mail.js')}}"
