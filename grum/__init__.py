@@ -8,4 +8,4 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ["DATABASE_URL"]
 
 db = SQLAlchemy(app)
 
-from grum import views
+from grum import views, models
