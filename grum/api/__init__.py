@@ -7,7 +7,10 @@ rest = Api(api)
 
 from grum.api import models
 
-# Let's get routing!
+# Import the non-restful resources
+from grum.api import mailgun
+
+# Let's get restful!
 from grum.api.inbox import Inbox
 rest.add_resource(Inbox, '/inbox')
 
