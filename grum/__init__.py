@@ -2,6 +2,4 @@ from flask import Flask
 
 app = Flask(__name__)
 
-@app.route("/")
-def basichome():
-    return "Hello, Heroku"
+from grum import views
