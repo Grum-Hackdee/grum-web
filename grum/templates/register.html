@@ -9,22 +9,22 @@
   <!-- iCheck -->
   <link href="{{ url_for('static', filename='bower/adminlte/plugins/iCheck/square/blue.css')}}" rel="stylesheet" type="text/css" />
 
-  <div class="register-page container">
+  <div class="input-container container">
     <div class="register-box">
       <div class="register-logo">
-        <a href="/"><b>GRU</b>M</a>
+        <a href="/"><b>GRU</b><i class="fa fa-envelope-o"></i></a>
       </div>
 
       <div class="register-box-body">
         <p class="login-box-msg">Register</p>
         <form method="post">
           <div class="form-group has-feedback">
-            <input type="text" class="form-control" name="username" ""placeholder="Username"/>
+            <input type="text" class="form-control" name="username" placeholder="Username"/>
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
           </div>
           <div class="form-group has-feedback">
             <input type="password" class="form-control" name="password" placeholder="Password"/>
-            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
           </div>
           <div class="form-group has-feedback">
             <input type="password" class="form-control" name="confirm" placeholder="Retype password"/>
@@ -39,7 +39,7 @@
           </div><!-- /.form-group -->
         </form>        
 
-        <a href="/login" class="text-center">Already have an account?</a>
+        <a href="/" class="text-center">Already have an account?</a>
       </div><!-- /.form-box -->
     </div><!-- /.register-box -->
   </div><!-- /.register-page -->

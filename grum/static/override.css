@@ -1,3 +1,11 @@
 .content-wrapper {
     margin-left: 0px;
 }
+/*
+.input-container {
+    background-image: url(/static/img/input-container.jpg)
+}
+*/
+.register-logo > a {
+    color: #BDBDBD;
+}
