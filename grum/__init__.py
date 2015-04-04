@@ -5,7 +5,8 @@ from flask.ext.sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 if os.environ['DEBUG']:
-    app.config['DEBUG'] == True
+    app.config['DEBUG'] = True
+    app.debug=True
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ["DATABASE_URL"]
 
 db = SQLAlchemy(app)
