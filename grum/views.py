@@ -1,5 +1,5 @@
 from grum import app
-from flask import render_template
+from flask import render_template, request
 
 
 @app.route("/")
@@ -10,9 +10,13 @@ def main():
 @app.route("/register", methods=['GET', 'POST'])
 def register():
 
-    # check if post...
-    username = request.form('username')
-    password = request.form('password')
-    confirm = request.form('confirm')
+    if request.method == "POST":
+        username = request.form('username')
+        password = request.form('password')
+        confirm_password = request.form('confirm')
     
     return render_template("register.html")
+
+@app.route("/mail")
+def mail():
+    return render_template('mail.html')
