@@ -13,6 +13,8 @@ class Inbox(Resource):
                 "from": message.sender_nice,
                 "from_raw": message.sender,
                 "subject": message.subject,
-                "id": message.id
+                "id": message.id,
+                "read": message.read,
+                "plaintext_body": message.plaintext_stripped
             })
         return jsonify(inbox=inbox)
