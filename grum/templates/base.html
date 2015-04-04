@@ -3,31 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <!-- add css here -->
-  <script type="application/javascript" src="{{ url_for('static', filename='bower/adminlte/plugins/jQuery/jQuery-2.1.3.min.js')}}"></script>
-  <script type="application/javascript" src="{{ url_for('static', filename='bower/adminlte/plugins/jQueryUI/jquery-ui-1.10.3.js')}}"></script>
-  <script type="application/javascript" src="{{ url_for('static', filename='bower/angularjs/angular.js')}}"></script>
-  <script src="//cdn.ravenjs.com/1.1.15/jquery,native/raven.min.js"></script>
-  <script type="application/javascript" src="{{ url_for('static', filename='bower/ravenjs/dist/raven.js')}}"></script>
-
-  <script>
-    Raven.config('http://86d0de3a81684211859e7c26169fecc9@judoon.tardis.ed.ac.uk/6', {
-    // we highly recommend restricting exceptions to a domain in order to filter out clutter
-    whitelistUrls: ['example.com/scripts/']
-    }).install();
-  </script>
 
   <title>{% block title %}GRUM{% endblock %}</title>
   <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
   <!-- Bootstrap 3.3.2 -->
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
   <!-- Font Awesome Icons -->
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
   <!-- Ionicons -->
   <link href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet" type="text/css" />
-
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bower/adminlte/dist/css/AdminLTE.css') }}" media="screen" />
-  <script type="application/javascript" src="{{ url_for('static', filename='bower/adminlte/dist/js/app.js') }}"></script>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bower/adminlte/dist/css/skins/_all-skins.css') }}" media="screen" />
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='override.css')}}" media="screen" />
 
@@ -59,7 +45,33 @@
     {% block body %}
       <p>This is the body of base</p>
     {% endblock %}
+
+
+
+  <script type="application/javascript" src="{{ url_for('static', filename='bower/adminlte/plugins/jQuery/jQuery-2.1.3.min.js')}}"></script>
+  <script type="application/javascript" src="{{ url_for('static', filename='bower/adminlte/plugins/jQueryUI/jquery-ui-1.10.3.js')}}"></script>
+  <script type="application/javascript" src="{{ url_for('static', filename='bower/angularjs/angular.js')}}"></script>
+  <script src="//cdn.ravenjs.com/1.1.15/jquery,native/raven.min.js"></script>
+  <script type="application/javascript" src="{{ url_for('static', filename='bower/ravenjs/dist/raven.js')}}"></script>
+
+  <script>
+    Raven.config('http://86d0de3a81684211859e7c26169fecc9@judoon.tardis.ed.ac.uk/6', {
+    // we highly recommend restricting exceptions to a domain in order to filter out clutter
+    whitelistUrls: ['example.com/scripts/']
+    }).install();
+  </script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <script type="application/javascript" src="{{ url_for('static', filename='bower/adminlte/dist/js/app.js') }}"></script>
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+  <![endif]-->
+      {% block endjs %}
+      {% endblock %}
     <!-- add angular -->
+
   </div>
 </body>
 </html>

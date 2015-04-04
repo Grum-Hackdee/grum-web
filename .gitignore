@@ -10,7 +10,7 @@ __pycache__/
 env/
 build/
 develop-eggs/
-dist/
+#dist/
 downloads/
 eggs/
 .eggs/
@@ -62,4 +62,5 @@ target/
 .env
 
 # Bower
-grum/static/bower
+# lol we cant get heroku to run bower install
+# grum/static/bower

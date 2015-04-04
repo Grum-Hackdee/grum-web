@@ -19,3 +19,5 @@ class Message(db.Model):
     plaintext = db.Column(db.Text)
     plaintext_stripped = db.Column(db.Text)
     plaintext_stripped_signature = db.Column(db.Text)
+
+    read = db.Column(db.Boolean)

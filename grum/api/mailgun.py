@@ -19,7 +19,8 @@ def receive_from_mailgun():
         html_stripped=d['stripped-html'],
         plaintext=d['body-plain'],
         plaintext_stripped=d['stripped-text'],
-        plaintext_stripped_signature=d['stripped-signature']
+        plaintext_stripped_signature=d['stripped-signature'],
+        read=False
     )
 
     db.session.add(newmail)
