@@ -10,3 +10,4 @@ from grum.api import models
 # Let's get routing!
 from grum.api.inbox import Inbox
 rest.add_resource(Inbox, '/inbox')
+
