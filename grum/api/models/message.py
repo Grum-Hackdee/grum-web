@@ -9,7 +9,7 @@ class Message(db.Model):
 
     sender = db.Column(db.String(128))
     sender_nice = db.Column(db.String(128))
-    sent_at = db.Column(db.Timestamp)
+    sent_at = db.Column(db.Integer)
 
     html = db.Column(db.Text)
     html_stripped = db.Column(db.Text)
