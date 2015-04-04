@@ -9,4 +9,10 @@ def main():
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
+
+    # check if post...
+    username = request.form('username')
+    password = request.form('password')
+    confirm = request.form('confirm')
+    
     return render_template("register.html")

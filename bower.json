@@ -16,6 +16,6 @@
   ],
   "dependencies": {
     "angularjs": "1.3.0",
-    "semantic-ui": "1.11.6"
+    "adminlte": "2.0.5"
   }
 }
