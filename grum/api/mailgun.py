@@ -14,6 +14,7 @@ def receive_from_mailgun():
         sender=d['sender'],
         sender_nice=d['from'],
         sent_at=d['timestamp'],
+        subject=d['subject'],
         html=d['body-html'],
         html_stripped=d['stripped-html'],
         plaintext=d['body-plain'],

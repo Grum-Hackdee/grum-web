@@ -15,4 +15,4 @@ class Inbox(Resource):
                 "subject": message.subject,
                 "id": message.id
             })
-        return jsonify(inbox=messages)
+        return jsonify(inbox=inbox)
