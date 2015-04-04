@@ -1,0 +1,1 @@
+web: gunicorn grum:app --log-file=-
