@@ -1,6 +1,6 @@
 from grum import db
 from grum.api import api
-from grum.models import Message
+from grum.api.models import Message
 from flask import request, Response
 
 

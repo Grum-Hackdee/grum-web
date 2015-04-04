@@ -5,8 +5,6 @@ from flask.ext.restful import Api
 api = Blueprint("api", __name__, template_folder="templates")
 rest = Api(api)
 
-from grum.api import models
-
 # Import the non-restful resources
 from grum.api import mailgun
 
