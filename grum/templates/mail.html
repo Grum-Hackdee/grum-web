@@ -126,7 +126,31 @@
 {% block body %}
 
   <!-- Content Wrapper. Contains page content -->
-  <div ng-app="grum" class="content-wrapper">
+  <div ng-app="grum" ng-controller="InboxController" class="content-wrapper">
+
+    {% raw %}
+      <div id="focus_email" class="modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+              <h4 class="modal-title">{{ focus_mail.subject }}</h4>
+              <h7 class="modal-title">{{ focus_mail.from }}</h7>
+            </div>
+            <div class="modal-body">
+              <p>{{ focus_mail.plaintext_stripped }}</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Mark as Unread</button>
+              <button type="button" class="btn btn-primary">Close</button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div>
+    {% endraw %}
+
+
+    
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
@@ -148,9 +172,11 @@
             <div class="box-header with-border">
               <h3 class="box-title">Folders</h3>
             </div>
-            <div class="box-body no-padding">
+            <div  class="box-body no-padding">
               <ul class="nav nav-pills nav-stacked">
-                <li class="active"><a href="#"><i class="fa fa-inbox"></i> Inbox <span class="label label-primary pull-right">12</span></a></li>
+                {% raw %}
+                  <li class="active"><a href="#"><i class="fa fa-inbox"></i> Inbox <span class="label label-primary pull-right">{{ emails.length | filter:{} }}</span></a></li>
+                {% endraw %}
                 <li><a href="#"><i class="fa fa-envelope-o"></i> Sent</a></li>
                 <li><a href="#"><i class="fa fa-file-text-o"></i> Drafts</a></li>
                 <li><a href="#"><i class="fa fa-filter"></i> Junk <span class="label label-waring pull-right">65</span></a></li>
@@ -200,57 +226,78 @@
                   </div><!-- /.btn-group -->
                 </div><!-- /.pull-right -->
               </div>
-              <div ng-controller="InboxController" class="table-responsive mailbox-messages">
+              <div class="table-responsive mailbox-messages">
                 <table class="table table-hover table-striped">
                   <tbody>
+
+                    
                     <!-- begin messages -->
                     {% raw %}
                       <span class="box-header" ng-show="!emails.length"><em>No Emails!</em></span>
-                      <tr ng-repeat="email in emails">
-                        <td><input type="checkbox" /></td>
-                        <td class="mailbox-star"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
-                        <td class="mailbox-name"><a href="read-mail.html">{{ email.from_raw }}</a></td>
-                        <td class="mailbox-subject"><b>{{ email.subject }}</b> - Insert beginning here...</td>
-                        <td class="mailbox-date">{{ email.timestamp }}</td>
-                      {% endraw %}
-                      <!-- end message -->
-                      </tr>
-                  </tbody>
-                </table><!-- /.table -->
-              </div><!-- /.mail-box-messages -->
-            </div><!-- /.box-body -->
-            <div class="box-footer no-padding">
-              <div class="mailbox-controls">
-                <!-- Check all button -->
-                <button class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i></button>                    
-                <div class="btn-group">
-                  <button class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
-                  <button class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
-                  <button class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
-                </div><!-- /.btn-group -->
-                <button class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
-                <div class="pull-right">
-                  1-50/200
-                  <div class="btn-group">
-                    <button class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-                    <button class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
-                  </div><!-- /.btn-group -->
-                </div><!-- /.pull-right -->
-              </div>
-            </div>
-          </div><!-- /. box -->
-        </div><!-- /.col -->
-      </div><!-- /.row -->
-    </section><!-- /.content -->
-  </div><!-- /.content-wrapper -->
-  <footer class="main-footer">
-    <div class="pull-right hidden-xs">
-      <b>Version</b> 2.0
-    </div>
-    <strong>Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights reserved.
-  </footer>
+                    <tr ng-repeat="email in emails" ng-click="focusEmail($index)">
+                      <!-- <td><input type="checkbox" /></td> -->
+                      <td class="mailbox-star"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
+                      <tj class="mailbox-name"><a href="#">{{ email.from }}</a></td>
+                      <td class="mailbox-subject">
+                        <span ng-if="email.read == true">
+                             <em>{{ email.subject }}</em>
+                        </span>
+                        <span ng-if="email.read == false">
+                             <b>{{ email.subject }}</b>
+                        </span>
+                        - {{ email.plaintext_body }}</td>
+                        <td class="mailbox-date">{{ email.fromnow }}</td>
+            <td class="mailbox-test"><abbr class="loaded timeago" title="{{ email.timestamp }}"></abbr></td>
+            {% endraw %}
+<!-- end message -->
+
+
+</tr>
+</tbody>
+</table><!-- /.table -->
+</div><!-- /.mail-box-messages -->
+</div><!-- /.box-body -->
+<div class="box-footer no-padding">
+  <div class="mailbox-controls">
+    <!-- Check all button -->
+    <button class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i></button>                    
+    <div class="btn-group">
+      <button class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
+      <button class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
+      <button class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
+    </div><!-- /.btn-group -->
+    <button class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
+    <div class="pull-right">
+      1-50/200
+      <div class="btn-group">
+        <button class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
+        <button class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
+      </div><!-- /.btn-group -->
+    </div><!-- /.pull-right -->
+  </div>
+</div>
+</div><!-- /. box -->
+</div><!-- /.col -->
+</div><!-- /.row -->
+</section><!-- /.content -->
+</div><!-- /.content-wrapper -->
+<footer class="main-footer">
+  <div class="pull-right hidden-xs">
+    <b>Version</b> 2.0
+  </div>
+  <strong>Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights reserved.
+</footer>
 </div><!-- ./wrapper -->
 
-<script src="{{ url_for('static', filename='lib/js/moment.js') }}"></script>
-<script type="application/javascript" src="{{ url_for('static', filename='mail.js')}}"></script>
+{% endblock %}
+
+{% block endjs %}
+  <script src="{{ url_for('static', filename='lib/js/moment.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/js/jquery.timeago.js') }}"></script>
+  <script>
+    jQuery(document).ready(function() {
+    jQuery("abbr.timeago").timeago();
+    });
+  </script>
+  <script type="application/javascript" src="{{ url_for('static', filename='mail.js')}}"></script>
 {% endblock %}
