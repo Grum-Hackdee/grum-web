@@ -2,7 +2,6 @@ import os
 
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
-from raven.contrib.flask import Sentry
 
 app = Flask(__name__)
 if "DEBUG" in os.environ:
