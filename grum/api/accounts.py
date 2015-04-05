@@ -40,7 +40,7 @@ class Accounts(Resource):
             resp.status_code = 409
             return resp
 
-        return jsonify(status="Success")
+        return jsonify(status="Success", account=acc)
 
 
 class Account(Resource):
@@ -74,19 +74,23 @@ class Account(Resource):
     def post(self, address):
         '''We POST to send mail'''
         account = EmailAccount.query.filter_by(address=address).first_or_404()
+        owner = User.query.filter_by(id=account.owner_id).first()
 
         mail = request.get_json()
 
         domain = address.split("@")[1]
         mg_url = MAILGUN_API_BASE + domain + MAILGUN_API_ENDPOINT
 
-        return requests.post(
+        res = requests.post(
             mg_url,
             auth=("api", account.mg_api),
             data={
-                "from": str(mail['from']),
+                "from": owner.get_formatted_from(address),
                 "to": str(mail['to']),
                 "subject": str(mail['subject']),
                 "text": str(mail['text'])
             }
         )
+
+        if res.status_code == 200:
+            return jsonify(status="Success!")

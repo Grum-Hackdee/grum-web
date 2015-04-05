@@ -23,6 +23,15 @@ class User(db.Model):
         hashed = bcrypt.hashpw(plaintext_password.encode('utf-8'), bytes(self.password.encode('utf-8')))
         return hashed == bytes(self.password.encode('utf-8'))
 
+    def get_formatted_from(self, address):
+        output = ""
+
+        if self.display_name:
+            output = self.display_name + " "
+
+        output += "<" + address + ">"
+        return output
+
 
 class EmailAccount(db.Model):
     address = db.Column(db.String(128), primary_key=True)
