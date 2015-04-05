@@ -20,7 +20,7 @@ class Inbox(Resource):
 
             inbox.append({
                 "timestamp": message.sent_at,
-                "from": message.sender_nice,
+                "from": message.sender_nice.split(" <")[0],
                 "from_raw": message.sender,
                 "subject": message.subject,
                 "id": message.id,
