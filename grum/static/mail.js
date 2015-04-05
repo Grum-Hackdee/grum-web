@@ -48,7 +48,7 @@ angular.module('grum', [])
         }
 
         var check_email = function() {
-            $http.get('/api/inbox')
+            $http.get('/api/inbox?count=15')
                 .success(function(data, status, headers, config) {
                     emails = data['inbox'].reverse();
                     update_scope();
@@ -219,7 +219,7 @@ angular.module('grum', [])
         setInterval(function() {
             timeAgoTick();
             $rootScope.$apply();
-        }, 1000 * 10);
+        }, 1000 * 5);
         return {
             // publish
             timeAgoTick: timeAgoTick,
