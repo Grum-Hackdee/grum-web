@@ -208,6 +208,11 @@ angular.module('grum', [])
             $http.post('/api/accounts/' + $scope.compose.email, $scope.compose)
                 .success(function() { console.log('message sent'); })
         }
+
+        $scope.wipeCompose = function() {
+            $scope.compose = {};
+            $scope.compose.email = 'harry@f-t.so';
+        }
         
     }])
     .factory('NotificationService', ['$rootScope', function($rootScope) {
