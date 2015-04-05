@@ -1,11 +1,20 @@
 from flask import jsonify
-from flask.ext.restful import Resource
+from flask.ext.restful import Resource, reqparse
 from .models import Message
 
 
 class Inbox(Resource):
     def get(self):
-        messages = Message.query.order_by(Message.sent_at).limit(25).all()
+        parser = reqparse.RequestParser()
+        parser.add_argument('count', type=int, help='Number of results to return')
+        args = parser.parse_args()
+
+        if "count" in args:
+            limit = args['count']
+        else:
+            limit = 25
+
+        messages = Message.query.order_by(Message.sent_at).limit(limit).all()
         inbox = []
         for message in messages:
             cropped = message.plaintext_stripped
