@@ -8,9 +8,11 @@ class User(db.Model):
     password = db.Column(db.String(128))
     display_name = db.Column(db.String(128))
 
-    def __init__(self, username=None, password=None):
+    def __init__(self, username=None, display_name=None, password=None):
         if username:
             self.username = username
+        if display_name:
+            self.display_name = display_name
         if password:
             self.set_password(password)
 
