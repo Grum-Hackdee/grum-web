@@ -82,11 +82,11 @@ class Account(Resource):
 
         return requests.post(
             mg_url,
-            auth={"api", account.mg_api},
+            auth=("api", account.mg_api),
             data={
                 "from": str(mail['from']),
                 "to": str(mail['to']),
                 "subject": str(mail['subject']),
-                "text": str(mail['body'])
+                "text": str(mail['text'])
             }
         )
