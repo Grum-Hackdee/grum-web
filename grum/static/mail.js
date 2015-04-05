@@ -1,52 +1,114 @@
 "use strict";
 
 angular.module('grum', [])
-    .controller('InboxController', ['$scope','$http', 'NotificationService', function($scope, $http, NotificationService) {
-        $scope.emails = [];
-        $scope.focus_mail = {};
-        $scope.focusEmail = function(index) {
-            // get email, and focus
-            $http.get('/api/messages/' + $scope.emails[index].id)
-                .success(function(data, success, headers, config) {
-                    $scope.emails[index].read = true;
-                    $scope.focus_mail = data['message'];
-                    $("#focus_email").modal();
-                })
-                .error(function(data, success, headers, config) {
-                    $scope.error = "Could not access Message " + email.id
-                    Raven.captureMessage($scope.error);
-                })
-        }
-
-        var updateScope = function() {
-            for (var i = 0; i < $scope.emails.length; i++) {
-                $scope.emails[i].fromnow = moment($scope.emails[i].timestamp * 1000).fromNow();
-                $scope.emails[i].f_fromnow = moment($scope.emails[i].timestamp * 1000).fromNow;
-                // $scope.emails[i].gravatar = "";
-                $scope.emails[i].gravatar = 'http://www.gravatar.com/avatar/' + md5($scope.emails[i].from_raw) + "?s=32"
+    .service('EmailService', ['$rootScope', '$http', function($rootScope, $http) {
+        var BROADCAST = 'EMAIL_RECIEVED';
+        var MESSAGE_ARRIVAL = 'MESSAGE_ARRIVED';
+        var update_scope = function() {
+            for (var i = 0; i < emails.length; i++) {
+                emails[i].fromnow = moment(emails[i].timestamp * 1000).fromNow();
+                emails[i].f_fromnow = moment(emails[i].timestamp * 1000).fromNow;
+                // emails[i].gravatar = "";
+                emails[i].gravatar = 'http://www.gravatar.com/avatar/' + md5(emails[i].from_raw) + "?s=32"
             }
         }
-        var checkEmail = function() {
+
+        var check_email = function() {
             $http.get('/api/inbox')
                 .success(function(data, status, headers, config) {
-                    $scope.emails = data['inbox'].reverse();
-                    updateScope();
+                    emails = data['inbox'].reverse();
+                    update_scope();
+                    $rootScope.$broadcast(BROADCAST);
                 })
                 .error(function(data, status, headers, config) {
-                    $scope.error = "Could not update emails, please try again later and check your connection."
-                    Raven.captureMessage($scope.error);
+                    error = "Could not update emails, please try again later and check your connection."
+                    Raven.captureMessage(error);
                 })
-                .finally()
-                    }
-
-
+        }
+        var emails = [];
+        var cached_messages = {};
+        var latest_message = {}
         
-        checkEmail();
-        NotificationService.onTimeAgo($scope, checkEmail);
-        $scope.getEmail = Raven.context(function() { checkEmail(); });
+        return {
+            updateScope: function() { update_scope(); },
+            checkEmail: function() { check_email(); },
+            getEmail: function() { if(emails.length == 0) check_email(); return emails; },
+            markUnread: function(id) {
+                // put to messages/id
+
+                $http.put('/api/messages/' + id)
+                    .success(function(data, success, headers, config) {
+                        for (var i = 0; i < emails.length; i++) {
+                            if (emails[i].id === id) {
+                                emails[i].read = false;
+                                break;
+                            }
+                        }
+                        $rootScope.$broadcast(BROADCAST);
+                    })
+            },
+            onEmailUpdate: function($scope, handler) {
+                $scope.$on(BROADCAST, function() {
+                    handler();
+                })
+            },
+            onMessageArrival: function($scope, handler) {
+                $scope.$on(MESSAGE_ARRIVAL, function(event, args) {
+                    handler(event, args);
+                })
+            },
+            loadMessage: function(id) {
+
+                $http.get('/api/messages/' + emails[id].id)
+                    .success(function(data, success, headers, config) {
+                        // change this to a function...
+                        cached_messages[data.id] = data['message'];
+                        latest_message = data['message'];
+                        $rootScope.$broadcast(MESSAGE_ARRIVAL, data);
+                    })
+
+                    .error(function(data, success, headers, config) {
+                        var error = "Could not access Message " + emails[id].id
+                        Raven.captureMessage(error);
+                    })
+
+                setTimeout(function() {
+                    emails[id].read = true;
+                    $rootScope.$broadcast(BROADCAST);
+                }, 150);
+            }
+
+        }
+
+    }])
+    .controller('InboxController', ['$scope','$http', 'NotificationService', 'EmailService', function($scope, $http, NotificationService, EmailService) {
+        $scope.focus_mail = {};
+        $scope.emails = EmailService.getEmail();
+        $scope.getEmail = Raven.context(function() { EmailService.checkEmail(); });
+        $scope.markUnread = function(id, bool) {
+            EmailService.markUnread(id, bool);
+        }
+
+        $scope.focusEmail = function(index) {
+            // get email, and focus
+            EmailService.loadMessage(index);
+        }
+
+        EmailService.onEmailUpdate($scope, function() {
+            $scope.emails = EmailService.getEmail();
+        });
+        EmailService.onMessageArrival($scope, function(event, args) {
+            $scope.focus_mail = args['message'];
+            $("#focus_email").modal();
+        });
+
+
+        NotificationService.onTimeAgo($scope, EmailService.checkEmail);
+        EmailService.checkEmail();
+        
     }])
     .factory('NotificationService', ['$rootScope', function($rootScope) {
-        var TIME_AGO_TICK = "e:timAgo";
+        var TIME_AGO_TICK = "e:timeAgo";
         var timeAgoTick = function() {
             $rootScope.$broadcast(TIME_AGO_TICK);
         }
@@ -54,7 +116,7 @@ angular.module('grum', [])
         setInterval(function() {
             timeAgoTick();
             $rootScope.$apply();
-        }, 1000 * 60);
+        }, 1000 * 10);
         return {
             // publish
             timeAgoTick: timeAgoTick,

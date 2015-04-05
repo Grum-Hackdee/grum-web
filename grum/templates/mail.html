@@ -14,7 +14,10 @@
           <span class="label label-success">4</span>
         </a>
         <ul class="dropdown-menu">
-          <li class="header">You have 4 messages</li>
+          {% raw %}
+          <li class="header">New mail {{ (email | filter:{read = 'false').length}) }}</li>
+          {% endraw %}
+          
           <li>
             <!-- inner menu: contains the actual data -->
             <ul class="menu">
@@ -36,6 +39,7 @@
           <li class="footer"><a href="#">See All Messages</a></li>
         </ul>
       </li>
+      {#
       <!-- Notifications: style can be found in dropdown.less -->
       <li class="dropdown notifications-menu">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -58,6 +62,8 @@
           <li class="footer"><a href="#">View all</a></li>
         </ul>
       </li>
+      #}
+      {#
       <!-- Tasks: style can be found in dropdown.less -->
       <li class="dropdown tasks-menu">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -90,6 +96,7 @@
           </li>
         </ul>
       </li>
+      #}
       <!-- User Account: style can be found in dropdown.less -->
       <li class="dropdown user user-menu">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -141,8 +148,8 @@
               <p>{{ focus_mail.plaintext_stripped }}</p>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Mark as Unread</button>
-              <button type="button" class="btn btn-primary">Close</button>
+              <button type="button" class="btn btn-default pull-left"  data-dismiss="modal">Close</button>
+              <button type="button" ng-click="markUnread(focus_mail.id)" class="btn btn-primary">Mark as Unread</button>
             </div>
           </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -155,7 +162,9 @@
     <section class="content-header">
       <h1>
         Mailbox
-        <small>13 new messages</small>
+        {% raw %}
+        <small>{{ emails.length }} Messages</small>
+        {% endraw %}
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -175,15 +184,18 @@
             <div  class="box-body no-padding">
               <ul class="nav nav-pills nav-stacked">
                 {% raw %}
-                  <li class="active"><a href="#"><i class="fa fa-inbox"></i> Inbox <span class="label label-primary pull-right">{{ emails.length | filter:{} }}</span></a></li>
+                  <li class="active"><a href="#"><i class="fa fa-inbox"></i> Inbox <span class="label label-primary pull-right">{{ (emails | filter:{read: 'false'}).length }}</span></a></li>
                 {% endraw %}
+                {#
                 <li><a href="#"><i class="fa fa-envelope-o"></i> Sent</a></li>
                 <li><a href="#"><i class="fa fa-file-text-o"></i> Drafts</a></li>
                 <li><a href="#"><i class="fa fa-filter"></i> Junk <span class="label label-waring pull-right">65</span></a></li>
                 <li><a href="#"><i class="fa fa-trash-o"></i> Trash</a></li>
+                #}
               </ul>
             </div><!-- /.box-body -->
           </div><!-- /. box -->
+          {#
           <div class="box box-solid">
             <div class="box-header with-border">
               <h3 class="box-title">Labels</h3>
@@ -196,20 +208,24 @@
               </ul>
             </div><!-- /.box-body -->
           </div><!-- /.box -->
+          #}
         </div><!-- /.col -->
         <div class="col-md-9">
           <div class="box box-primary">
             <div class="box-header with-border">
               <h3 class="box-title">Inbox</h3>
               <div class="box-tools pull-right">
+                {#
                 <div class="has-feedback">
                   <input type="text" class="form-control input-sm" placeholder="Search Mail"/>
                   <span class="glyphicon glyphicon-search form-control-feedback"></span>
                 </div>
+                #}
               </div><!-- /.box-tools -->
             </div><!-- /.box-header -->
             <div class="box-body no-padding">
               <div class="mailbox-controls">
+                {#
                 <!-- Check all button -->
                 <button class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i></button>
                 <div class="btn-group">
@@ -217,13 +233,16 @@
                   <button class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
                   <button class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
                 </div><!-- /.btn-group -->
+                #}
                 <button class="btn btn-default btn-sm"><i ng-click="checkEmail()" class="fa fa-refresh"></i></button>
                 <div class="pull-right">
-                  1-50/200
+                  <!-- 1-50/200 -->
+                  {#
                   <div class="btn-group">
                     <button class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
                     <button class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
                   </div><!-- /.btn-group -->
+                    #}
                 </div><!-- /.pull-right -->
               </div>
               <div class="table-responsive mailbox-messages">
@@ -235,7 +254,6 @@
                     {% raw %}
                       <span class="box-header" ng-show="!emails.length"><em>No Emails!</em></span>
                     <tr ng-repeat="email in emails" ng-click="focusEmail($index)">
-                      {# <!-- <td><input type="checkbox" /></td> --> #}
                       <td class="mailbox-star"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
                       <td class="mailbox-icon"><img src="{{ email.gravatar }}" class="img-circle" alt="Circular Image"></td>
                       <tj class="mailbox-name"><a href="#">{{ email.from }}</a></td>
@@ -269,11 +287,13 @@
     </div><!-- /.btn-group -->
     <button class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
     <div class="pull-right">
-      1-50/200
+      <!-- 1-50/200 -->
+      {#
       <div class="btn-group">
         <button class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
         <button class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
       </div><!-- /.btn-group -->
+      #}
     </div><!-- /.pull-right -->
   </div>
 </div>
