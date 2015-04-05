@@ -25,3 +25,12 @@ class Messages(Resource):
             'plaintext_stripped': msg.plaintext_stripped,
             'plaintext_stripped_signature': msg.plaintext_stripped_signature
         })
+
+    def put(self, message_id):
+        msg = Message.query.filter_by(id=message_id).first_or_404()
+
+        msg.read = False
+        db.session.add(msg)
+        db.session.commit()
+
+        return jsonify(status="Success")
