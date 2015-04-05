@@ -8,6 +8,7 @@ from flask.ext.restful import Resource
 MAILGUN_API_BASE = "https://api.mailgun.net/v3/"
 MAILGUN_API_ENDPOINT = "/messages"
 
+
 class Accounts(Resource):
     def get(self):
         accounts = EmailAccount.query.all()
