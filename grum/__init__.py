@@ -15,6 +15,7 @@ if "SENTRY_DSN" in os.environ:
     from raven.contrib.flask import Sentry
     sentry = Sentry(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ["DATABASE_URL"]
+app.config['SECRET_KEY'] = os.urandom(64)
 
 db = SQLAlchemy(app)
 lm = LoginManager(app)
@@ -27,4 +28,4 @@ from grum.models import User
 
 @lm.user_loader
 def load_user(userid):
-    return User.query.filter_by(userid).first()
+    return User.query.filter_by(id=userid).first()
