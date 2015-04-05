@@ -56,4 +56,13 @@ class Account(Resource):
 
     def delete(self, address):
         '''Delete an email account's information'''
-        pass
+        # Here be dragons
+        account = EmailAccount.query.filter_by(address=address).first_or_404()
+        try:
+            db.session.delete(account)
+            db.session.commit()
+        except:
+            resp = jsonify(status="Error")
+            resp.status_code = 500
+            return resp
+        return jsonify(status="Success")
