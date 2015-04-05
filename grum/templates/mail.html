@@ -254,8 +254,7 @@
                     {% raw %}
                       <span class="box-header" ng-show="!emails.length"><em>No Emails!</em></span>
                     <tr ng-repeat="email in emails" ng-click="focusEmail($index)">
-                      <td class="mailbox-star"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
-                      <td class="mailbox-icon"><img src="{{ email.gravatar }}" class="img-circle" alt="Circular Image"></td>
+                      <td class="mailbox-icon"><img ng-src="{{ email.gravatar }}" class="img-circle" alt="Circular Image"></td>
                       <tj class="mailbox-name"><a href="#">{{ email.from }}</a></td>
                       <td class="mailbox-subject">
                         <span ng-if="email.read == true">

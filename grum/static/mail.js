@@ -27,7 +27,6 @@ angular.module('grum', [])
         }
         var emails = [];
         var cached_messages = {};
-        var latest_message = {}
         
         return {
             updateScope: function() { update_scope(); },
@@ -59,12 +58,20 @@ angular.module('grum', [])
             },
             loadMessage: function(id) {
 
+                if (emails[id].id in cached_messages) {
+                    // we have already fetched this message.
+                    // time to short-circuit.
+                    emails[id].read = true;
+                    emails[id].dirty = true;
+                    $rootScope.$broadcast(MESSAGE_ARRIVAL, cached_messages[emails[id].id])
+                    $rootScope.$broadcast(BROADCAST);
+                    return;
+                }
                 $http.get('/api/messages/' + emails[id].id)
                     .success(function(data, success, headers, config) {
                         // change this to a function...
-                        cached_messages[data.id] = data['message'];
-                        latest_message = data['message'];
-                        $rootScope.$broadcast(MESSAGE_ARRIVAL, data);
+                        cached_messages[data['message'].id] = data['message'];
+                        $rootScope.$broadcast(MESSAGE_ARRIVAL, data['message']);
                     })
 
                     .error(function(data, success, headers, config) {
@@ -98,12 +105,26 @@ angular.module('grum', [])
             $scope.emails = EmailService.getEmail();
         });
         EmailService.onMessageArrival($scope, function(event, args) {
-            $scope.focus_mail = args['message'];
+            $scope.focus_mail = args;
             $("#focus_email").modal();
         });
 
 
-        NotificationService.onTimeAgo($scope, EmailService.checkEmail);
+        NotificationService.onTimeAgo($scope, function() {
+            for (var i = 0; i < $scope.emails.length; i++) {
+                if ($scope.emails[i].dirty == true) {
+                    if ($scope.emails[i].read === true) {
+                        // HACK: THIS NEEDS TO BE FIXED
+                        // marking as read on the server.
+                        $http.get('/api/messages/' + $scope.emails[i].id);
+                    } else {
+                        $http.put('/api/messages/' + $scope.emails[i].id);
+                    }
+                    $scope.emails[i].dirty = false;
+                }
+            }
+            EmailService.checkEmail();
+        });
         EmailService.checkEmail();
         
     }])
