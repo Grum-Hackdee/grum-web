@@ -217,7 +217,7 @@
                   <button class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
                   <button class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
                 </div><!-- /.btn-group -->
-                <button class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
+                <button class="btn btn-default btn-sm"><i ng-click="checkEmail()" class="fa fa-refresh"></i></button>
                 <div class="pull-right">
                   1-50/200
                   <div class="btn-group">
@@ -235,8 +235,9 @@
                     {% raw %}
                       <span class="box-header" ng-show="!emails.length"><em>No Emails!</em></span>
                     <tr ng-repeat="email in emails" ng-click="focusEmail($index)">
-                      <!-- <td><input type="checkbox" /></td> -->
+                      {# <!-- <td><input type="checkbox" /></td> --> #}
                       <td class="mailbox-star"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
+                      <td class="mailbox-icon"><img src="{{ email.gravatar }}" class="img-circle" alt="Circular Image"></td>
                       <tj class="mailbox-name"><a href="#">{{ email.from }}</a></td>
                       <td class="mailbox-subject">
                         <span ng-if="email.read == true">
@@ -294,6 +295,7 @@
 {% block endjs %}
   <script src="{{ url_for('static', filename='lib/js/moment.js') }}"></script>
   <script src="{{ url_for('static', filename='lib/js/jquery.timeago.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/js/md5.js')}}"</script>
   <script>
     jQuery(document).ready(function() {
     jQuery("abbr.timeago").timeago();

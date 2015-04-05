@@ -8,6 +8,7 @@ angular.module('grum', [])
             // get email, and focus
             $http.get('/api/messages/' + $scope.emails[index].id)
                 .success(function(data, success, headers, config) {
+                    $scope.emails[index].read = true;
                     $scope.focus_mail = data['message'];
                     $("#focus_email").modal();
                 })
@@ -21,6 +22,8 @@ angular.module('grum', [])
             for (var i = 0; i < $scope.emails.length; i++) {
                 $scope.emails[i].fromnow = moment($scope.emails[i].timestamp * 1000).fromNow();
                 $scope.emails[i].f_fromnow = moment($scope.emails[i].timestamp * 1000).fromNow;
+                // $scope.emails[i].gravatar = "";
+                $scope.emails[i].gravatar = 'http://www.gravatar.com/avatar/' + md5($scope.emails[i].from_raw) + "?s=32"
             }
         }
         var checkEmail = function() {
