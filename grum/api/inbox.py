@@ -8,6 +8,16 @@ class Inbox(Resource):
         messages = Message.query.order_by(Message.sent_at).limit(25).all()
         inbox = []
         for message in messages:
+            cropped = message.plaintext_stripped
+
+            if "\r\n" in cropped:
+                cropped = cropped.split("\r\n")[0]
+
+            if len(cropped) > 120:
+                cropped = cropped[117]
+
+            cropped = cropped + "..."
+
             inbox.append({
                 "timestamp": message.sent_at,
                 "from": message.sender_nice,
