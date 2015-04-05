@@ -243,6 +243,7 @@ angular.module('grum', [])
         });
         UserService.onUserInformation($scope, function() {
             $scope.user = UserService.getUser();
+            $scope.user.emails = ['harry@f-o.so', 'some@other.com'];
         })
         
         var user;

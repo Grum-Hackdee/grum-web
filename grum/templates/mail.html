@@ -113,8 +113,8 @@
           </li>
           <li>
             <ul class="list-unstyled user-body">
-              <li ng-repeat="email in ['one', 'two']">
-                {{ email }}
+              <li ng-repeat="email in user.emails" class="container">
+                <span>{{ email}}</span>
                 </li>
               </ul>
             </li>
