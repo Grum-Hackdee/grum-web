@@ -1,8 +1,12 @@
+import requests
+
 from grum import db
 from grum.models import User, EmailAccount
 from flask import jsonify, request
 from flask.ext.restful import Resource
 
+MAILGUN_API_BASE = "https://api.mailgun.net/v3/"
+MAILGUN_API_ENDPOINT = "/messages"
 
 class Accounts(Resource):
     def get(self):
@@ -66,3 +70,23 @@ class Account(Resource):
             resp.status_code = 500
             return resp
         return jsonify(status="Success")
+
+    def post(self, address):
+        '''We POST to send mail'''
+        account = EmailAccount.query.filter_by(address=address).first_or_404()
+
+        mail = request.get_json()
+
+        domain = address.split("@")[1]
+        mg_url = MAILGUN_API_BASE + domain + MAILGUN_API_ENDPOINT
+
+        return requests.post(
+            mg_url,
+            auth={"api", account.mg_api},
+            data={
+                "from": str(mail['from']),
+                "to": str(mail['to']),
+                "subject": str(mail['subject']),
+                "text": str(mail['body'])
+            }
+        )
