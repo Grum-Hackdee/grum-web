@@ -4,7 +4,7 @@
   "description": "Server & web-client for grum",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "bower install"
   },
   "repository": {
     "type": "git",
@@ -15,8 +15,5 @@
   "bugs": {
     "url": "https://github.com/Grum-Hackdee/grum-web/issues"
   },
-    "homepage": "https://github.com/Grum-Hackdee/grum-web",
-    "scripts": {
-        "postinstall": "bower install"
-    }
+  "homepage": "https://github.com/Grum-Hackdee/grum-web"
 }
