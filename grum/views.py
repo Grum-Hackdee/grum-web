@@ -1,18 +1,19 @@
 from grum import app, db
 from grum.models import User
-from flask import render_template, request
+from flask import render_template, request, redirect
 
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def main():
-    # # Login verification code
-    # username = request.form('username')
-    # password = request.form('password')
-    #
-    # user = User.query.filter_by(username=username).first_or_404()
-    # if user.validate_password(password):
-    #     # Logged in
-    # # Not Logged In
+    if request.method == "POST":
+        # Login verification code
+        username = request.form['username']
+        password = request.form['password']
+
+        user = User.query.filter_by(username=username).first_or_404()
+        if user.validate_password(password):
+            return redirect("/mail")
+
     return render_template("index.html")
 
 
@@ -20,9 +21,9 @@ def main():
 def register():
 
     if request.method == "POST":
-        username = request.form('username')
-        password = request.form('password')
-        confirm_password = request.form('confirm')
+        username = request.form['username']
+        password = request.form['password']
+        confirm_password = request.form['confirm']
 
         if password != confirm_password:
             return redirect("/register")
@@ -34,6 +35,8 @@ def register():
 
         db.session.add(new_user)
         db.session.commit()
+
+        return redirect("/mail")
     
     return render_template("register.html")
 
