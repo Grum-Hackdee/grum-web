@@ -18,3 +18,6 @@ rest.add_resource(Messages, '/messages/<string:message_id>')
 from grum.api.accounts import Account, Accounts
 rest.add_resource(Account, '/accounts/<string:address>')
 rest.add_resource(Accounts, '/accounts')
+
+from grum.api.user import UserApi
+rest.add_resource(UserApi, '/users/<int:userid>')
