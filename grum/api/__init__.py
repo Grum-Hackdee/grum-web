@@ -14,3 +14,7 @@ rest.add_resource(Inbox, '/inbox')
 
 from grum.api.messages import Messages
 rest.add_resource(Messages, '/messages/<string:message_id>')
+
+from grum.api.accounts import Account, Accounts
+rest.add_resource(Accounts, '/accounts')
+rest.add_resource(Account, '/account/<int:account_id>')
