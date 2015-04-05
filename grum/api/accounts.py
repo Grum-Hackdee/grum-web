@@ -28,21 +28,32 @@ class Accounts(Resource):
             mg_api=str(inc['mg_api'])
         )
 
-        db.session.add(acc)
-        db.session.commit()
+        try:
+            db.session.add(acc)
+            db.session.commit()
+        except:
+            resp = jsonify(status="Resource Already Exists")
+            resp.status_code = 409
+            return resp
 
         return jsonify(status="Success")
 
 
 class Account(Resource):
-    def get(self, account_id):
+    def get(self, address):
         '''Get an individual email account information'''
-        pass
+        account = EmailAccount.query.filter_by(address=address).first_or_404()
 
-    def put(self, account_id):
+        return jsonify(account={
+            "address": account.address,
+            "owner_id": account.owner_id,
+            "mg_api": account.mg_api
+        })
+
+    def put(self, address):
         '''Update an email account's information'''
         pass
 
-    def delete(self, account_id):
+    def delete(self, address):
         '''Delete an email account's information'''
         pass
