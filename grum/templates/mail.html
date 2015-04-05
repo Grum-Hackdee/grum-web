@@ -11,32 +11,35 @@
       <li class="dropdown messages-menu">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
           <i class="fa fa-envelope-o"></i>
-          <span class="label label-success">4</span>
+          {% raw %}
+          <span class="label label-success">{{ (emails | filter:{read: false}).length }}</span>
+          {% endraw %}
         </a>
         <ul class="dropdown-menu">
           {% raw %}
-          <li class="header">New mail {{ emails }}</li>
+          <li class="header">New mail <em>{{ (emails | filter:{read: false}).length }}</em></li>
           {% endraw %}
           
           <li>
             <!-- inner menu: contains the actual data -->
             <ul class="menu">
-              <li><!-- start message -->
+              {% raw %}
+              <li ng-repeat="email in filter = emails | filter:{read: false}" ng-click="loadMessage($index)"><!-- start message -->
                 <a href="#">
                   <div class="pull-left">
-                    <img src="{{ url_for('static', filename='bower/adminlte/dist/img/user1-128x128.jpg')}}" class="img-circle" alt="User Image"/>
+                    <img ng-src="{{ email.gravatar }}" class="img-circle" alt="User Image"/>
                   </div>
                   <h4>
-                    Sender Name
-                    <small><i class="fa fa-clock-o"></i> 5 mins</small>
+                    {{ email.from }}
+                    <small><i class="fa fa-clock-o"></i> {{ email.fromnow }}</small>
                   </h4>
-                  <p>Message Excerpt</p>
+                  <p>{{ email.plaintext_body | limitTo:20}}...</p>
                 </a>
               </li><!-- end message -->
               ...
+              {% endraw %}
             </ul>
           </li>
-          <li class="footer"><a href="#">See All Messages</a></li>
         </ul>
       </li>
       {#

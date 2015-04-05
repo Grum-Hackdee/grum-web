@@ -173,6 +173,7 @@ angular.module('grum', [])
     }])
     .controller('NavController', ['$scope', 'EmailService', function($scope, EmailService) {
         $scope.emails = EmailService.getEmail();
+        $scope.loadMessage = function(id) { EmailService.loadMessage(id) }
 
         
         EmailService.onEmailUpdate($scope, function() {
