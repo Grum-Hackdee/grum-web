@@ -1,6 +1,41 @@
 "use strict";
 
 angular.module('grum', [])
+    .service('UserService', ['$rootScope', '$http', function($rootScope, $http) {
+        var USER_INFO = 'USER_INFO';
+        var user;
+        var _user = {}
+
+        var init = function() {
+            user = window.userid;
+            getInfo(function() { return window.userid; });
+        }
+
+        var getInfo = function(f) {
+            if (f() === undefined) {
+                setTimeout(function() { getInfo(f); }, 150)
+            }
+            $http.get('/api/users/' + user)
+                .success(function(data, result, headers, config) {
+                    _user = data['user'];
+                    $rootScope.$broadcast(USER_INFO);
+                })
+        }
+
+        
+
+        init();
+
+        return {
+            loadUser: function() { getInfo(); },
+            getUser: function() {  return _user; },
+            onUserInformation: function($scope, handler) {
+                $scope.$on(USER_INFO, function() {
+                    handler();
+                })
+            },
+        }
+    }])
     .service('EmailService', ['$rootScope', '$http', function($rootScope, $http) {
         var BROADCAST = 'EMAIL_RECIEVED';
         var MESSAGE_ARRIVAL = 'MESSAGE_ARRIVED';
@@ -8,7 +43,6 @@ angular.module('grum', [])
             for (var i = 0; i < emails.length; i++) {
                 emails[i].fromnow = moment(emails[i].timestamp * 1000).fromNow();
                 emails[i].f_fromnow = moment(emails[i].timestamp * 1000).fromNow;
-                // emails[i].gravatar = "";
                 emails[i].gravatar = 'http://www.gravatar.com/avatar/' + md5(emails[i].from_raw) + "?s=32"
             }
         }
@@ -161,10 +195,19 @@ angular.module('grum', [])
         EmailService.checkEmail();
         
     }])
-    .controller('ComposeController', ['$scope', function($scope) {
-        $scope.to = '';
-        $scope.subject = '';
-        $scope.text = '';
+    .controller('ComposeController', ['$scope', '$http', 'UserService', function($scope, $http, UserService) {
+        $scope.compose = {};
+        $scope.compose.to = '';
+        $scope.compose.subject = '';
+        $scope.compose.text = '';
+        // $scope.emails = UserService.getUser().emails;
+        $scope.emails = ['harry@f-t.so', 'some@other.com'];
+        $scope.compose.email = 'harry@f-t.so';
+
+        $scope.sendEmail = function() {
+            $http.post('/api/accounts/' + $scope.compose.email, $scope.compose)
+                .success(function() { console.log('message sent'); })
+        }
         
     }])
     .factory('NotificationService', ['$rootScope', function($rootScope) {
@@ -189,13 +232,22 @@ angular.module('grum', [])
         };
 
     }])
-    .controller('NavController', ['$scope', 'EmailService', function($scope, EmailService) {
+    .controller('NavController', ['$scope', 'EmailService', 'UserService', function($scope, EmailService, UserService) {
         $scope.emails = EmailService.getEmail();
         $scope.loadMessage = function(id, bool) { EmailService.loadMessage(id, bool) }
+        $scope.user = UserService.getUser();
 
         
         EmailService.onEmailUpdate($scope, function() {
             $scope.emails = EmailService.getEmail();
         });
+        UserService.onUserInformation($scope, function() {
+            $scope.user = UserService.getUser();
+        })
+        
+        var user;
+        var init = function() {
+            user = window.user;
+        }
+        init();
     }])
-    .service()

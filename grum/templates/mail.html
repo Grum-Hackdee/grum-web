@@ -103,18 +103,21 @@
       <li class="dropdown user user-menu">
         {% raw %}
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-          <img src="{{ url_for('static', filename='bower/adminlte/dist/img/user1-128x128.jpg')}}" class="user-image" alt="User Image"/>
-          <span class="hidden-xs">Name here</span>
+          <img src="http://www.gravatar.com/avatar/2b114d0826f8108a00a68168c4fab9b2?s=32" class="user-image" alt="User Image"/>
+          <span class="hidden-xs">{{ user.display_name }}</span>
         </a>
         <ul class="dropdown-menu">
           <!-- User image -->
-          <li class="user-header">
-            <img src="{{ user.url }}" class="img-circle" alt="User Image"/>
-            <p>
-              Name here again?
-              <small>This could be fun</small>
-            </p>
+          <li class="user-header" >
+            <p style="color: rgb(131, 119, 119);">{{ user.display_name}}</p>
           </li>
+          <li>
+            <ul class="list-unstyled user-body">
+              <li ng-repeat="email in ['one', 'two']">
+                {{ email }}
+                </li>
+              </ul>
+            </li>
           <!-- Menu Body -->
           <!-- Menu Footer-->
           <li class="user-footer">
@@ -179,7 +182,6 @@
     <section class="content">
       <div class="row">
         <div class="col-md-3">
-          <a href="compose.html" class="btn btn-primary btn-block margin-bottom">Compose</a>
           <div class="box box-solid">
             <div class="box-header with-border">
               <h3 class="box-title">Folders</h3>
@@ -308,19 +310,22 @@
     </div><!-- /.box-header -->
     <div class="box-body">
       <div class="form-group">
-        <input class="form-control" placeholder="To:">
+        <input ng-model="compose.email" class="form-control" placeholder="From:"/>
+    </div>
+      <div class="form-group">
+        <input class="form-control" ng-model="compose.to" placeholder="To:">
       </div>
       <div class="form-group">
-        <input class="form-control" placeholder="Subject:">
+        <input class="form-control" ng-model="compose.subject" placeholder="Subject:">
       </div>
       <div class="form-group">
-        <textarea id="compose-textarea" class="form-control" placeholder="Nothing to Say?..." cols="80" rows="5" ></textarea>
+        <textarea id="compose-textarea" class="form-control" ng-model="compose.text" placeholder="Nothing to Say?..." cols="80" rows="5" ></textarea>
       </div>
     </div><!-- /.box-body -->
     <div class="box-footer">
       <div class="pull-right">
         <button class="btn btn-default"><i class="fa fa-pencil"></i> Draft</button>
-        <button type="submit" class="btn btn-primary"><i class="fa fa-envelope-o"></i> Send</button>
+        <button ng-click="sendEmail()" type="submit" class="btn btn-primary"><i class="fa fa-envelope-o"></i> Send</button>
       </div>
       <button class="btn btn-default"><i class="fa fa-times"></i> Discard</button>
     </div><!-- /.box-footer -->
@@ -347,10 +352,12 @@
   <script src="{{ url_for('static', filename='lib/js/jquery.timeago.js') }}"></script>
   <script src="{{ url_for('static', filename='lib/js/md5.js')}}"</script>
           <script>
-            var userid = {{ current_user.id }};
             jQuery(document).ready(function() {
             jQuery("abbr.timeago").timeago();
             });
+          </script>
+          <script>
+            window.userid = {{ current_user.id }};
           </script>
           <script type="application/javascript" src="{{ url_for('static', filename='mail.js')}}"></script>
         {% endblock %}
