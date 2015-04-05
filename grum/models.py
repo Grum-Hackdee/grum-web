@@ -17,6 +17,12 @@ class User(db.Model, UserMixin):
         if password:
             self.set_password(password)
 
+    def get_display_name(self):
+        if self.display_name:
+            return self.display_name
+        else:
+            return self.username
+
     def set_password(self, plaintext_password):
         self.password = bcrypt.hashpw(plaintext_password.encode('utf-8'), bcrypt.gensalt())
 
@@ -29,6 +35,8 @@ class User(db.Model, UserMixin):
 
         if self.display_name:
             output = self.display_name + " "
+        else:
+            output = self.username + " "
 
         output += "<" + address + ">"
         return output
