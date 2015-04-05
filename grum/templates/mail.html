@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block logged_in %}
-  <div class="navbar-custom-menu">
+  <div ng-controller="NavController" class="navbar-custom-menu">
     <ul class="nav navbar-nav">
       <!-- Messages: style can be found in dropdown.less-->
       <li class="dropdown messages-menu">
@@ -15,7 +15,7 @@
         </a>
         <ul class="dropdown-menu">
           {% raw %}
-          <li class="header">New mail {{ (email | filter:{read = 'false').length}) }}</li>
+          <li class="header">New mail {{ emails }}</li>
           {% endraw %}
           
           <li>
@@ -144,8 +144,7 @@
               <h4 class="modal-title">{{ focus_mail.subject }}</h4>
               <h7 class="modal-title">{{ focus_mail.from }}</h7>
             </div>
-            <div class="modal-body">
-              <p>{{ focus_mail.plaintext_stripped }}</p>
+            <div ng-bind-html="renderHtml(focus_mail.html)" class="modal-body">
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default pull-left"  data-dismiss="modal">Close</button>
@@ -234,7 +233,7 @@
                   <button class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
                 </div><!-- /.btn-group -->
                 #}
-                <button class="btn btn-default btn-sm"><i ng-click="checkEmail()" class="fa fa-refresh"></i></button>
+                <button ng-click="Sync()" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
                 <div class="pull-right">
                   <!-- 1-50/200 -->
                   {#
@@ -253,10 +252,10 @@
                     <!-- begin messages -->
                     {% raw %}
                       <span class="box-header" ng-show="!emails.length"><em>No Emails!</em></span>
-                    <tr ng-repeat="email in emails" ng-click="focusEmail($index)">
-                      <td class="mailbox-icon"><img ng-src="{{ email.gravatar }}" class="img-circle" alt="Circular Image"></td>
-                      <tj class="mailbox-name"><a href="#">{{ email.from }}</a></td>
-                      <td class="mailbox-subject">
+                    <tr ng-repeat="email in emails" >
+                      <td ng-click="focusEmail($index)" class="mailbox-icon"><img ng-src="{{ email.gravatar }}" class="img-circle" alt="Circular Image"></td>
+                      <tj ng-click="focusEmail($index)" class="mailbox-name"><a href="#">{{ email.from }}</a></td>
+                      <td ng-click="focusEmail($index)" class="mailbox-subject">
                         <span ng-if="email.read == true">
                              <em>{{ email.subject }}</em>
                         </span>
@@ -265,7 +264,8 @@
                         </span>
                         - {{ email.plaintext_body }}</td>
                         <td class="mailbox-date">{{ email.fromnow }}</td>
-            <td class="mailbox-test"><abbr class="loaded timeago" title="{{ email.timestamp }}"></abbr></td>
+            <td class="mailbox-timeago"><abbr class="loaded timeago" title="{{ email.timestamp }}"></abbr></td>
+            <td class="mailbox-markread" ng-click="markRead($index)" ><span class="fa fa-align-right"></span>
             {% endraw %}
 <!-- end message -->
 

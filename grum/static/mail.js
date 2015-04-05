@@ -46,6 +46,10 @@ angular.module('grum', [])
                         $rootScope.$broadcast(BROADCAST);
                     })
             },
+            markRead: function(id) {
+                $http.get('/api/messages/' + emails[id].id)
+                    .success(function() {})
+            },
             onEmailUpdate: function($scope, handler) {
                 $scope.$on(BROADCAST, function() {
                     handler();
@@ -88,13 +92,21 @@ angular.module('grum', [])
         }
 
     }])
-    .controller('InboxController', ['$scope','$http', 'NotificationService', 'EmailService', function($scope, $http, NotificationService, EmailService) {
+    .controller('InboxController', ['$scope','$http', '$sce', 'NotificationService', 'EmailService', function($scope, $http, $sce, NotificationService, EmailService) {
         $scope.focus_mail = {};
+        $scope.renderHtml = function(html_code) {
+            return $sce.trustAsHtml(html_code);
+        }
         $scope.emails = EmailService.getEmail();
         $scope.getEmail = Raven.context(function() { EmailService.checkEmail(); });
         $scope.markUnread = function(id, bool) {
             EmailService.markUnread(id, bool);
         }
+        $scope.markRead = function(id) { EmailService.markRead(id); }
+
+        $scope.Sync = function() { EmailService.checkEmail(); }
+
+        $scope.func = function() {}
 
         $scope.focusEmail = function(index) {
             // get email, and focus
@@ -116,13 +128,22 @@ angular.module('grum', [])
                     if ($scope.emails[i].read === true) {
                         // HACK: THIS NEEDS TO BE FIXED
                         // marking as read on the server.
-                        $http.get('/api/messages/' + $scope.emails[i].id);
-                    } else {
-                        $http.put('/api/messages/' + $scope.emails[i].id);
+                        var index = i
+                        $http.get('/api/messages/' + $scope.emails[i].id).success(function() {
+                            try {
+                                $scope.emails[index].dirty = false;
+                            } catch (err) {
+                                Raven.captureException(err);
+                            }
+                        })
+                    } else if ($scope.emails[i].dirty == false){
+                        $http.put('/api/messages/' + $scope.emails[i].id).success(function() {
+                            $scope.emails[index].dirty = false;
+                        })
                     }
-                    $scope.emails[i].dirty = false;
                 }
             }
+            // This happens second, so that the state of the client is preserved.
             EmailService.checkEmail();
         });
         EmailService.checkEmail();
@@ -149,4 +170,12 @@ angular.module('grum', [])
             }
         };
 
+    }])
+    .controller('NavController', ['$scope', 'EmailService', function($scope, EmailService) {
+        $scope.emails = EmailService.getEmail();
+
+        
+        EmailService.onEmailUpdate($scope, function() {
+            $scope.emails = EmailService.getEmail();
+        });
     }])
