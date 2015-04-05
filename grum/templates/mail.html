@@ -12,31 +12,30 @@
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
           <i class="fa fa-envelope-o"></i>
           {% raw %}
-          <span class="label label-success">{{ (emails | filter:{read: false}).length }}</span>
+            <span class="label label-success">{{ (emails | filter:{read: false}).length }}</span>
           {% endraw %}
         </a>
         <ul class="dropdown-menu">
           {% raw %}
-          <li class="header">New mail <em>{{ (emails | filter:{read: false}).length }}</em></li>
+            <li class="header">New mail <em>{{ (emails | filter:{read: false}).length }}</em></li>
           {% endraw %}
           
           <li>
             <!-- inner menu: contains the actual data -->
             <ul class="menu">
               {% raw %}
-              <li ng-repeat="email in filter = emails | filter:{read: false}" ng-click="loadMessage($index)"><!-- start message -->
-                <a href="#">
-                  <div class="pull-left">
-                    <img ng-src="{{ email.gravatar }}" class="img-circle" alt="User Image"/>
-                  </div>
-                  <h4>
-                    {{ email.from }}
-                    <small><i class="fa fa-clock-o"></i> {{ email.fromnow }}</small>
-                  </h4>
-                  <p>{{ email.plaintext_body | limitTo:20}}...</p>
-                </a>
-              </li><!-- end message -->
-              ...
+                <li ng-repeat="email in filter = emails | filter:{read: false}" ng-click="loadMessage(email.id, true)"><!-- start message -->
+                  <a href="#">
+                    <div class="pull-left">
+                      <img ng-src="{{ email.gravatar }}" class="img-circle" alt="User Image"/>
+                    </div>
+                    <h4>
+                      {{ email.from }}
+                      <small><i class="fa fa-clock-o"></i> {{ email.fromnow }}</small>
+                    </h4>
+                    <p>{{ email.plaintext_body | limitTo:20}}...</p>
+                  </a>
+                </li><!-- end message -->
               {% endraw %}
             </ul>
           </li>
@@ -165,7 +164,7 @@
       <h1>
         Mailbox
         {% raw %}
-        <small>{{ emails.length }} Messages</small>
+          <small>{{ emails.length }} Messages</small>
         {% endraw %}
       </h1>
       <ol class="breadcrumb">
@@ -212,7 +211,7 @@
           </div><!-- /.box -->
           #}
         </div><!-- /.col -->
-        <div class="col-md-9">
+        <div class="col-md-6">
           <div class="box box-primary">
             <div class="box-header with-border">
               <h3 class="box-title">Inbox</h3>
@@ -244,7 +243,7 @@
                     <button class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
                     <button class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
                   </div><!-- /.btn-group -->
-                    #}
+                  #}
                 </div><!-- /.pull-right -->
               </div>
               <div class="table-responsive mailbox-messages">
@@ -258,18 +257,18 @@
                     <tr ng-repeat="email in emails" >
                       <td ng-click="focusEmail($index)" class="mailbox-icon"><img ng-src="{{ email.gravatar }}" class="img-circle" alt="Circular Image"></td>
                       <tj ng-click="focusEmail($index)" class="mailbox-name"><a href="#">{{ email.from }}</a></td>
-                      <td ng-click="focusEmail($index)" class="mailbox-subject">
-                        <span ng-if="email.read == true">
-                             <em>{{ email.subject }}</em>
-                        </span>
-                        <span ng-if="email.read == false">
-                             <b>{{ email.subject }}</b>
-                        </span>
-                        - {{ email.plaintext_body }}</td>
-                        <td class="mailbox-date">{{ email.fromnow }}</td>
-            <td class="mailbox-timeago"><abbr class="loaded timeago" title="{{ email.timestamp }}"></abbr></td>
-            <td class="mailbox-markread" ng-click="markRead($index)" ><span class="fa fa-align-right"></span>
-            {% endraw %}
+<td ng-click="focusEmail($index)" class="mailbox-subject">
+  <span ng-if="email.read == true">
+    <em>{{ email.subject }}</em>
+  </span>
+  <span ng-if="email.read == false">
+    <b>{{ email.subject }}</b>
+  </span>
+  - {{ email.plaintext_body | limitTo:120}}</td>
+  <td class="mailbox-date">{{ email.fromnow }}</td>
+<td class="mailbox-timeago"><abbr class="loaded timeago" title="{{ email.timestamp }}"></abbr></td>
+<td class="mailbox-markread" ng-click="markRead($index)" ><span class="fa fa-align-right"></span>
+{% endraw %}
 <!-- end message -->
 
 
@@ -300,7 +299,34 @@
   </div>
 </div>
 </div><!-- /. box -->
+
+  <div ng-controller="ComposeController" class="box box-primary">
+    <div class="box-header with-border">
+      <h3 class="box-title">Compose New Message</h3>
+    </div><!-- /.box-header -->
+    <div class="box-body">
+      <div class="form-group">
+        <input class="form-control" placeholder="To:">
+      </div>
+      <div class="form-group">
+        <input class="form-control" placeholder="Subject:">
+      </div>
+      <div class="form-group">
+        <textarea id="compose-textarea" class="form-control" placeholder="Nothing to Say?..." cols="80" rows="5" ></textarea>
+      </div>
+    </div><!-- /.box-body -->
+    <div class="box-footer">
+      <div class="pull-right">
+        <button class="btn btn-default"><i class="fa fa-pencil"></i> Draft</button>
+        <button type="submit" class="btn btn-primary"><i class="fa fa-envelope-o"></i> Send</button>
+      </div>
+      <button class="btn btn-default"><i class="fa fa-times"></i> Discard</button>
+    </div><!-- /.box-footer -->
+  </div><!-- /. box -->
+
+
 </div><!-- /.col -->
+<div class="col-md-3"></div>
 </div><!-- /.row -->
 </section><!-- /.content -->
 </div><!-- /.content-wrapper -->
@@ -318,10 +344,10 @@
   <script src="{{ url_for('static', filename='lib/js/moment.js') }}"></script>
   <script src="{{ url_for('static', filename='lib/js/jquery.timeago.js') }}"></script>
   <script src="{{ url_for('static', filename='lib/js/md5.js')}}"</script>
-  <script>
-    jQuery(document).ready(function() {
-    jQuery("abbr.timeago").timeago();
-    });
-  </script>
-  <script type="application/javascript" src="{{ url_for('static', filename='mail.js')}}"></script>
-{% endblock %}
+          <script>
+            jQuery(document).ready(function() {
+            jQuery("abbr.timeago").timeago();
+            });
+          </script>
+          <script type="application/javascript" src="{{ url_for('static', filename='mail.js')}}"></script>
+        {% endblock %}

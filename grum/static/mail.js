@@ -48,7 +48,10 @@ angular.module('grum', [])
             },
             markRead: function(id) {
                 $http.get('/api/messages/' + emails[id].id)
-                    .success(function() {})
+                    .success(function() {
+                        emails[id].read = true;
+                        $rootScope.$broadcast(BROADCAST);
+                    })
             },
             onEmailUpdate: function($scope, handler) {
                 $scope.$on(BROADCAST, function() {
@@ -60,9 +63,16 @@ angular.module('grum', [])
                     handler(event, args);
                 })
             },
-            loadMessage: function(id) {
+            loadMessage: function(id, is_id) {
 
-                if (emails[id].id in cached_messages) {
+                var u_id = '';
+                if (is_id) {
+                    u_id = id;
+                } else {
+                    u_id = emails[id].id;
+                }
+
+                if (u_id in cached_messages) {
                     // we have already fetched this message.
                     // time to short-circuit.
                     emails[id].read = true;
@@ -71,7 +81,7 @@ angular.module('grum', [])
                     $rootScope.$broadcast(BROADCAST);
                     return;
                 }
-                $http.get('/api/messages/' + emails[id].id)
+                $http.get('/api/messages/' + u_id)
                     .success(function(data, success, headers, config) {
                         // change this to a function...
                         cached_messages[data['message'].id] = data['message'];
@@ -79,14 +89,16 @@ angular.module('grum', [])
                     })
 
                     .error(function(data, success, headers, config) {
-                        var error = "Could not access Message " + emails[id].id
+                        var error = "Could not access Message " + u_id
                         Raven.captureMessage(error);
                     })
 
-                setTimeout(function() {
-                    emails[id].read = true;
-                    $rootScope.$broadcast(BROADCAST);
-                }, 150);
+                if (!is_id) {
+                    setTimeout(function() {
+                        emails[id].read = true;
+                        $rootScope.$broadcast(BROADCAST);
+                    }, 150);
+                }
             }
 
         }
@@ -149,6 +161,12 @@ angular.module('grum', [])
         EmailService.checkEmail();
         
     }])
+    .controller('ComposeController', ['$scope', function($scope) {
+        $scope.to = '';
+        $scope.subject = '';
+        $scope.text = '';
+        
+    }])
     .factory('NotificationService', ['$rootScope', function($rootScope) {
         var TIME_AGO_TICK = "e:timeAgo";
         var timeAgoTick = function() {
@@ -173,7 +191,7 @@ angular.module('grum', [])
     }])
     .controller('NavController', ['$scope', 'EmailService', function($scope, EmailService) {
         $scope.emails = EmailService.getEmail();
-        $scope.loadMessage = function(id) { EmailService.loadMessage(id) }
+        $scope.loadMessage = function(id, bool) { EmailService.loadMessage(id, bool) }
 
         
         EmailService.onEmailUpdate($scope, function() {
