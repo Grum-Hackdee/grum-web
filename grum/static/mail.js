@@ -198,3 +198,4 @@ angular.module('grum', [])
             $scope.emails = EmailService.getEmail();
         });
     }])
+    .service()
